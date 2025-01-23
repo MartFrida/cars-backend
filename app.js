@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
 })
 
 
-const { DB_HOST, PORT = 3001 } = process.env
+const { DB_HOST, PORT = 3002 } = process.env
 
 mongoose.connect(DB_HOST)
   .then(() => {
