@@ -10,6 +10,8 @@ const carsRouter = express.Router()
 
 carsRouter.get('/', carControllers.getAllCars)
 
+carsRouter.get('/filters', carControllers.getCarsByFilter)
+
 carsRouter.get('/:id', isValidId, carControllers.getCarById)
 
 carsRouter.get('/owner/:id', authtenticate, carControllers.getAllCarsByOwner)

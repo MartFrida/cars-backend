@@ -26,6 +26,58 @@ const getAllCarsByOwner = async (req, res) => {
   })
 }
 
+const getCarsByFilter = async (req, res) => {
+  try {
+    const { page = 1, limit = 5 } = req.query
+    const skip = (page - 1) * limit
+    const { make, year, mileageFrom, mileageTo, minPrice, maxPrice, sortBy } = req.query
+
+    const query = {};
+
+    if (make) {
+      query.make = { $regex: make, $options: "i" }; // Пошук без урахування регістру
+    }
+
+    // Фільтрація за роком
+    if (year) {
+      query.year = {};
+      if (year) query.year.$gte = parseFloat(year); // Рік >= year
+    }
+    // Фільтрація за пробігом
+    if (mileageFrom || mileageTo) {
+      query.mileage = {};
+      console.log(mileageFrom)
+      if (mileageFrom) query.mileage.$gte = parseFloat(mileageFrom); // пробіг >= mileageFrom
+      if (mileageTo) query.mileage.$lte = parseFloat(mileageTo); // пробіг <= mileageTo
+    }
+    // Фільтрація за діапазоном цін
+    if (minPrice || maxPrice) {
+      query.rentalPrice = {};
+      if (minPrice) query.rentalPrice.$gte = parseFloat(minPrice); // Ціна >= minPrice
+      if (maxPrice) query.rentalPrice.$lte = parseFloat(maxPrice); // Ціна <= maxPrice
+    }
+    // Сортування (опціонально)
+    const sortOptions = {};
+    if (sortBy) {
+      sortOptions[sortBy] = order === "desc" ? -1 : 1; // Сортування за зростанням або спаданням
+    }
+
+    // // Виконання запиту
+    // const items = await carsServices.find(query).sort(sortOptions);
+    const result = await carsServices.getCarsByFilter(query, skip, limit)
+
+    // Повертаємо результат клієнту
+    console.log(skip, limit)
+    res.json(result);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+}
+
+
+
 const getCarById = async (req, res) => {
   const { id } = req.params
   const result = await carsServices.getCarById(id)
@@ -71,6 +123,7 @@ const deleteCar = async (req, res) => {
 export default {
   getAllCars: ctrlWrapper(getAllCars),
   getAllCarsByOwner: ctrlWrapper(getAllCarsByOwner),
+  getCarsByFilter: ctrlWrapper(getCarsByFilter),
   getCarById: ctrlWrapper(getCarById),
   addCar: ctrlWrapper(addCar),
   updateCar: ctrlWrapper(updateCar),

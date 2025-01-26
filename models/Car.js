@@ -41,7 +41,7 @@ const carSchema = new Schema({
     required: false,
   },
   rentalPrice: {
-    type: String,
+    type: Number,
     required: true,
   },
   rentalCompany: {
