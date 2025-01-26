@@ -28,7 +28,7 @@ const getAllCarsByOwner = async (req, res) => {
 
 const getCarsByFilter = async (req, res) => {
   try {
-    const { page = 1, limit = 5 } = req.query
+    const { page = 1, limit } = req.query
     const skip = (page - 1) * limit
     const { make, year, mileageFrom, mileageTo, minPrice, maxPrice, sortBy } = req.query
 

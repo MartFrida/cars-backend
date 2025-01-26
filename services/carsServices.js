@@ -4,7 +4,7 @@ export const getAllCars = (offset, limit) => Car.find().skip(offset).limit(limit
 
 // export const getCarsByFilter = (filter, query = {}) => Car.find(filter, '-createdAt -updatedAt', query)
 
-export const getCarsByFilter = (queryFilter = {}, offset, limit = 1) => Car.find(queryFilter).skip(offset).limit(limit).exec()
+export const getCarsByFilter = (queryFilter = {}, offset, limit) => Car.find(queryFilter).skip(offset).limit(limit).exec()
 
 export const getCarsCountByFilter = (filter) => Car.countDocuments(filter)
 
